@@ -1,0 +1,4 @@
+beautifulsoup4==4.3.2
+praw==2.1.14
+requests==2.2.1
+SQLAlchemy==0.8.4
