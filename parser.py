@@ -111,14 +111,16 @@ if __name__ == '__main__':
                 if sa_comment.rating != rating:
                     debug("  Comment's rating changed.")
                     sa_comment.rating = rating
+                    changed = True
 
                 if sa_comment.comment != text:
                     debug("  Comment's text changed.")
                     sa_comment.comment = text
+                    changed = True
 
-                changed = True
-                debug("  Saving changes to DB...")
-                session.commit()
+                if changed:
+                    debug("  Saving changes to DB...")
+                    session.commit()
 
 
             reddit_comment_text = REDDIT_COMMENT_SLUG.format(comment=text,
