@@ -88,10 +88,12 @@ if __name__ == '__main__':
 
             lepra_comment_url = '{0}#{1}'.format(lepra_url, comment_id)
             rating = int(node.find('span', attrs={'class': 'rating'}).text)
-            author = (node.find('div', attrs={'class': 'dd'})
-                          .find(attrs={'class': 'p'})
-                          .findAll('a')[1]
-                          .text)
+            author_info = (node.find('div', attrs={'class': 'dd'})
+                               .find(attrs={'class': 'p'})
+                               .findAll('a')[1])
+            author_prefix = author_info.previousSibling.strip()
+            author = author_info.text
+            author_postfix = author_info.nextSibling[1:].strip()
 
             sa_comment = session.query(Comment).filter_by(lepra_comment_id=comment_id).first()
 
@@ -122,11 +124,12 @@ if __name__ == '__main__':
                     debug("  Saving changes to DB...")
                     session.commit()
 
-
             reddit_comment_text = REDDIT_COMMENT_SLUG.format(comment=text,
                                                              comment_url=lepra_comment_url,
                                                              rating=rating,
-                                                             author=author)
+                                                             author_prefix=author_prefix,
+                                                             author=author,
+                                                             author_postfix=author_postfix)
 
             if not sa_comment.reddit_comment_id:
                 debug("  No comment at reddit yet. Posting a comment on Reddit...")
